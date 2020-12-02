@@ -1,3 +1,5 @@
+#pragma once
+
 //sets up the SPI registers to begin reading thermocouple data
 void InitSPI();
 

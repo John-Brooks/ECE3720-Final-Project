@@ -2,8 +2,9 @@
 #include "derivative.h"      /* derivative-specific definitions */
 #include "pi_control.h"
 #include "spi_thermocouple.h"
+#include "LCD.h" 
 
-#define UPDATE_RATE_S 0.5
+#define UPDATE_RATE_S 2.0
 #define CLOCK_FREQ 24000000
 #define PRESCALER 128
 
@@ -55,7 +56,8 @@ void DelayTicks(long ticks)
 
 
 void main(void) {
-  	float temperature;
+  float temperature;
+  int update_counter = 0;
 	Controller_t controller;
 	InitController(&controller);
 	InitTimer();
@@ -65,14 +67,18 @@ void main(void) {
 	EnableInterrupts;
 	for(;;)
 	{
-	  	temperature = GetTemperature(); 
+	  temperature = GetTemperature(); 
 		RunController(&controller, temperature, UPDATE_RATE_S);
+		
 		SetFanSpeed(controller.output);
-		//DelayTicks(ConvertTimeToCycles(UPDATE_RATE_S, PRESCALER));
+		
+		if (update_counter % 5 == 0) {
+		  LCD(temperature);
+		  DelayTicks(ConvertTimeToCycles(UPDATE_RATE_S - LCD_UPDATE_DELAY_S, PRESCALER));
+		} else {
+		  DelayTicks(ConvertTimeToCycles(UPDATE_RATE_S, PRESCALER));  
+		}
+		
+		update_counter++;
 	}  
-	
-	for(;;) {
-		_FEED_COP(); /* feeds the dog */
-	} /* loop forever */
-/* please make sure that you never leave main */
 }
