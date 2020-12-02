@@ -59,6 +59,7 @@ void main(void) {
 	PLLInit();
 	InitSPI();
 	InitFanPWM();
+	LCDsetup();
 
 	EnableInterrupts;
 	for(;;)
