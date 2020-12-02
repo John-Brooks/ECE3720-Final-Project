@@ -3,16 +3,11 @@
 #include "pi_control.h"
 #include "spi_thermocouple.h"
 #include "LCD.h" 
+#include "FanPWM.h"
 
 #define UPDATE_RATE_S 2.0
 #define CLOCK_FREQ 24000000
 #define PRESCALER 128
-
-//sets the fan speed PWM (0.0 - 1.0)
-void SetFanSpeed(float pwm)
-{
-
-}
 
 void InitTimer()
 {
@@ -56,21 +51,21 @@ void DelayTicks(long ticks)
 
 
 void main(void) {
-  float temperature;
-  int update_counter = 0;
+	float temperature;
+	int update_counter = 0;
 	Controller_t controller;
 	InitController(&controller);
 	InitTimer();
 	PLLInit();
 	InitSPI();
+	InitFanPWM();
 
 	EnableInterrupts;
 	for(;;)
 	{
 	  temperature = GetTemperature(); 
 		RunController(&controller, temperature, UPDATE_RATE_S);
-		
-		SetFanSpeed(controller.output);
+		//SetFanSpeed(0.25);
 		
 		if (update_counter % 5 == 0) {
 		  LCD(temperature);
