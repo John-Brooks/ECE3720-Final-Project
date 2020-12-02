@@ -1,16 +1,11 @@
 #include <hidef.h>      /* common defines and macros */
 #include "derivative.h"      /* derivative-specific definitions */
 #include "pi_control.h"
+#include "spi_thermocouple.h"
 
 #define UPDATE_RATE_S 0.5
 #define CLOCK_FREQ 24000000
 #define PRESCALER 128
-
-//returns the temperature in celcius of the thermocouple
-float GetTemperature()
-{
-
-}
 
 //sets the fan speed PWM (0.0 - 1.0)
 void SetFanSpeed(float pwm)
@@ -60,18 +55,21 @@ void DelayTicks(long ticks)
 
 
 void main(void) {
+  	float temperature;
 	Controller_t controller;
 	InitController(&controller);
 	InitTimer();
 	PLLInit();
+	InitSPI();
 
 	EnableInterrupts;
 	for(;;)
 	{
-		RunController(&controller, GetTemperature(), UPDATE_RATE_S);
+	  	temperature = GetTemperature(); 
+		RunController(&controller, temperature, UPDATE_RATE_S);
 		SetFanSpeed(controller.output);
-		DelayTicks(UPDATE_RATE_S, PRESCALER);
-	}
+		//DelayTicks(ConvertTimeToCycles(UPDATE_RATE_S, PRESCALER));
+	}  
 	
 	for(;;) {
 		_FEED_COP(); /* feeds the dog */
