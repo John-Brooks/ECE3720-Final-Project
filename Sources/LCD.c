@@ -8,7 +8,7 @@
 #define EN PORTK_BIT1_MASK  //EN pin of LCD
 
 void LCD(float temp) {
-  unsigned char LCDtemp[5];
+  unsigned char LCDtemp[32];
   sprintf(LCDtemp, "%0.1f", temp);
   COMNWRT(0x88);//set cursor for temp 
   MSDelay(15); //give LCD some time
@@ -21,7 +21,7 @@ void LCD(float temp) {
   DATAWRT(LCDtemp[3]);//display 
 }
 
-void LCDsetup(void) 
+void LCDsetup() 
 {
   DDRK = 0xFF; //PORTK=output
   COMNWRT(0x33);//init. LCD 2 lines, 5x7 matrix

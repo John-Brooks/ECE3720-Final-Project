@@ -66,7 +66,7 @@ void main(void) {
 	{
 	  temperature = GetTemperature(); 
 		RunController(&controller, temperature, UPDATE_RATE_S);
-		//SetFanSpeed(0.25);
+		SetFanSpeed(0.95);
 		
 		if (update_counter % 5 == 0) {
 		  LCD(temperature);
