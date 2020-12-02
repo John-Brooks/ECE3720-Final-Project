@@ -20,7 +20,7 @@ void SetFanSpeed(float duty_cycle)
 { 
   	y = 120 * duty_cycle;
 	  ATD0CTL5 = 0x87; 
-  	while(!(ATD0STAT0 & ATD0STAT0_SCF_MASK));
+  	//while(!(ATD0STAT0 & ATD0STAT0_SCF_MASK));
     //set Y to any number between 0 and 120 to get PWM signal out it
     PWMDuty(y);   
 }
